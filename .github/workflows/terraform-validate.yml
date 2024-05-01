@@ -1,0 +1,47 @@
+name: Terraform validate
+on:
+  pull_request
+
+jobs:
+  terraform:
+    name: Terraform validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout the repository
+        uses: actions/checkout@v3
+        #Commenting this part because ubuntu latest already have terraform installed  
+      #- name: setup terraform 
+        #uses: hashicorp/setup-terraform@v3
+        #with:
+          #terraform_version: 1.8.2
+      - name: Terraform init
+        id: init
+        run: terraform init
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+      - uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            <details><summary>Validation Output</summary>
+
+            \`\`\`\n
+            ${{ steps.validate.outputs.stdout }}
+            \`\`\`
+
+            </details>
+
+           *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+      - name: Checkov GitHub Action
+	uses: bridgecrewio/checkov-action@v12
+        with:
+	  # This will add both a CLI output to the console and create a results.sarif file
+	  output_format: cli,sarif
+	  output_file_path: console,results.sarif
