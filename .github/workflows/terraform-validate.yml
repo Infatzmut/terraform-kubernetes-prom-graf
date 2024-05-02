@@ -55,3 +55,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN}}
+        with:
+          args: >
+            -Dsonar.organization=infatzmut
+            -Dsonar.projectKey=terraform-kubernetes-prom-graf
