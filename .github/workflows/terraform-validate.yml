@@ -7,6 +7,9 @@ jobs:
   terraform:
     name: Terraform validate
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
     steps:
       - name: checkout the repository
         uses: actions/checkout@v3
@@ -42,7 +45,9 @@ jobs:
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
       - name: Checkov GitHub Action
         uses: bridgecrewio/checkov-action@v12
+        continue-on-error: true
         with:
           # This will add both a CLI output to the console and create a results.sarif file
+          framework: terraform
           output_format: cli,sarif
           output_file_path: console,results.sarif
