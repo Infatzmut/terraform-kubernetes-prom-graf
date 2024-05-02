@@ -40,8 +40,8 @@ jobs:
 
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
       - name: Checkov GitHub Action
-	uses: bridgecrewio/checkov-action@v12
+        uses: bridgecrewio/checkov-action@v12
         with:
-	  # This will add both a CLI output to the console and create a results.sarif file
-	  output_format: cli,sarif
-	  output_file_path: console,results.sarif
+          # This will add both a CLI output to the console and create a results.sarif file
+          output_format: cli,sarif
+          output_file_path: console,results.sarif
