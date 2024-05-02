@@ -51,3 +51,7 @@ jobs:
           framework: terraform
           output_format: cli,sarif
           output_file_path: console,results.sarif
+      - name: SonarCloud scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN}}
